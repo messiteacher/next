@@ -18,8 +18,8 @@ export default async function Page({
   const response = await client.GET("/api/v1/posts", {
     params: {
       query: {
-        keyword: keyword,
-        keywordType: keywordType,
+        keyword,
+        keywordType,
       },
     },
   });
