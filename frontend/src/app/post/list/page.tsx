@@ -76,7 +76,13 @@ export default async function Page({
       <div className="flex gap-3">
         {Array.from({ length: pageDto.totalPages }, (_, i) => i + 1).map(
           (page) => {
-            return <Link href={`/post/list?page=${page}`}>{page}</Link>;
+            return (
+              <Link
+                href={`/post/list?keywordType=${keywordType}&keyword=${keyword}&pageSize=${pageSize}&page=${page}`}
+              >
+                {page}
+              </Link>
+            );
           }
         )}
       </div>
