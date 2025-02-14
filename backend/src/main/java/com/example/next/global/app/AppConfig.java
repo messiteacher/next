@@ -19,4 +19,8 @@ public class AppConfig {
     public void setObjectMapper(ObjectMapper objectMapper) {
         AppConfig.objectMapper = objectMapper;
     }
+
+    public static String getSiteFrontUrl() {
+        return "http://localhost:3000";
+    }
 }
