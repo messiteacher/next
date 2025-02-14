@@ -20,7 +20,14 @@ export default async function Page({
       },
     },
   });
-  const rsData = response.data!!;
+
+  if (response.error) {
+    console.log(response);
+    return <div>에러가 발생했습니다.</div>;
+  }
+
+  const rsData = response.data;
   const post = rsData.data;
+
   return <ClientPage post={post} />;
 }
