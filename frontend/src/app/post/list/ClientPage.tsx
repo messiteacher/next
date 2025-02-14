@@ -1,6 +1,10 @@
+"use client";
+
 import { components } from "@/lib/backend/apiV1/schema";
 import Link from "next/link";
-export default async function ClinetPage({
+import { useRouter } from "next/navigation";
+
+export default function ClinetPage({
   rsData,
   keywordType,
   keyword,
@@ -13,6 +17,7 @@ export default async function ClinetPage({
   pageSize: number;
   page: number;
 }) {
+  const router = useRouter();
   const pageDto = rsData.data;
   return (
     <div>
@@ -24,7 +29,20 @@ export default async function ClinetPage({
       <div>currentPageNo : {pageDto.currentPageNo}</div>
       <div>pageSize : {pageDto.pageSize}</div>
       <hr />
-      <form>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target as HTMLFormElement);
+          const searchKeyword = formData.get("keyword") as string;
+          const searchKeywordType = formData.get("keywordType") as string;
+          const page = 1;
+          const pageSize = formData.get("pageSize") as string;
+          router.push(
+            `/post/list?keywordType=${searchKeywordType}&keyword=${searchKeyword}&pageSize=${pageSize}&page=${page}`
+          );
+        }}
+      >
         <select name="keywordType" defaultValue={keywordType}>
           <option value="title">제목</option>
           <option value="content">내용</option>
