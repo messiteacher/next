@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 
 export default function ClinetPage() {
   const router = useRouter();
-
   async function login(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -18,16 +17,14 @@ export default function ClinetPage() {
         username,
         password,
       },
+      credentials: "include",
     });
-
     if (response.error) {
       alert(response.error.msg);
       return;
     }
-
     router.push(`/post/list`);
   }
-
   return (
     <>
       <div>로그인 페이지</div>
