@@ -233,6 +233,10 @@ export interface components {
             msg: string;
             data: components["schemas"]["Empty"];
         };
+        PostModifyReqBody: {
+            title: string;
+            content: string;
+        };
         PostWithContentDto: {
             /** Format: int64 */
             id: number;
@@ -500,7 +504,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ModifyReqBody"];
+                "application/json": components["schemas"]["PostModifyReqBody"];
             };
         };
         responses: {

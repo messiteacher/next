@@ -20,7 +20,7 @@ export default function ClinetPage({
         <div>리스팅 여부 : {`${post.listed}`}</div>
       </div>
       <div>
-        <Link href="">수정</Link>
+        <Link href={`/post/edit/${post.id}`}>수정</Link>
       </div>
     </>
   );
