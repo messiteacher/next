@@ -27,6 +27,7 @@ export default function ClinetPage() {
       },
       credentials: "include",
     });
+
     if (response.error) {
       alert(response.error.msg);
       return;
