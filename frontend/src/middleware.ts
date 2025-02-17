@@ -7,9 +7,14 @@ export async function middleware(request: NextRequest) {
   console.log(request.nextUrl.toString());
 
   if (request.nextUrl.pathname.startsWith("/post/edit/")) {
-    console.log("접근 권한이 없습니다.");
-    return NextResponse.error();
+    return new NextResponse("로그인이 필요합니다.", {
+      status: 401,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
   }
+
   const nextResponse = NextResponse.next();
 
   const response = await client.GET("/api/v1/members/me", {
