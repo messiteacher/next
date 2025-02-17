@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import ClientPage from "./ClientPage";
 import client from "@/lib/backend/client";
 
@@ -8,14 +9,17 @@ export default async function Page({
     id: number;
   };
 }) {
-  const id = await params.id;
+  const { id } = await params;
+
   const response = await client.GET("/api/v1/posts/{id}", {
     params: {
       path: {
         id,
       },
     },
-    credentials: "include",
+    headers: {
+      cookie: (await cookies()).toString(),
+    },
   });
 
   if (response.error) {
