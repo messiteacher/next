@@ -57,13 +57,12 @@ public class ApiV1CommentController {
         return new CommentDto(comment);
     }
 
-    record WriteReqBody(String content) {}
+    record WriteReqBody(String content) { }
 
     @Operation(summary = "댓글 작성", description = "게시글에 댓글을 작성합니다.")
     @PostMapping
     @Transactional
     public RsData<Empty> write(@PathVariable long postId, @RequestBody WriteReqBody reqBody) {
-
         Member actor = rq.getActor();
         Comment comment = _write(postId, actor, reqBody.content());
 
@@ -75,12 +74,12 @@ public class ApiV1CommentController {
         );
     }
 
-    record ModifyReqBody(String content) {}
+    record CommentModifyReqBody(String content) {}
 
     @Operation(summary = "댓글 수정", description = "게시글의 댓글을 수정합니다.")
     @PutMapping("{id}")
     @Transactional
-    public RsData<Empty> modify(@PathVariable long postId, @PathVariable long id, @RequestBody ModifyReqBody reqBody) {
+    public RsData<Empty> modify(@PathVariable long postId, @PathVariable long id, @RequestBody CommentModifyReqBody reqBody) {
 
         Member actor = rq.getActor();
 

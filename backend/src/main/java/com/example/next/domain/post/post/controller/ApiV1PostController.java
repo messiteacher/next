@@ -1,7 +1,6 @@
 package com.example.next.domain.post.post.controller;
 
 import com.example.next.domain.member.member.entity.Member;
-import com.example.next.domain.member.member.service.MemberService;
 import com.example.next.domain.post.post.dto.PageDto;
 import com.example.next.domain.post.post.dto.PostWithContentDto;
 import com.example.next.domain.post.post.entity.Post;
@@ -30,7 +29,6 @@ public class ApiV1PostController {
 
     private final PostService postService;
     private final Rq rq;
-    private final MemberService memberService;
 
     record StatisticsResBody(@NonNull long postCount, @NonNull long postPublishedCount, @NonNull long postListedCount) { }
 
@@ -68,11 +66,10 @@ public class ApiV1PostController {
     @Operation(summary = "내 글 목록 조회", description = "페이징 처리와 검색 가능")
     @GetMapping("/mine")
     @Transactional(readOnly = true)
-    public RsData<PageDto> getMines(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "3") int pageSize,
-            @RequestParam(defaultValue = "title") SearchKeywordType keywordType,
-            @RequestParam(defaultValue = "") String keyword) {
+    public RsData<PageDto> getMines(@RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "3") int pageSize,
+                                    @RequestParam(defaultValue = "title") SearchKeywordType keywordType,
+                                    @RequestParam(defaultValue = "") String keyword) {
 
         Member actor = rq.getActor();
         Page<Post> pagePost = postService.getMines(actor, page, pageSize, keywordType, keyword);
@@ -97,17 +94,17 @@ public class ApiV1PostController {
             post.canRead(actor);
         }
 
+        PostWithContentDto postWithContentDto = new PostWithContentDto(post);
+        postWithContentDto.setCanActorHandle(post.getHandleAuthority(rq.getActor()));
+
         return new RsData<>(
                 "200-1",
                 "%d번 글을 조회하였습니다.".formatted(id),
-                new PostWithContentDto(post)
+                postWithContentDto
         );
     }
 
-    record WriteReqBody(@NotBlank String title,
-                        @NotBlank String content,
-                        boolean published,
-                        boolean listed) { }
+    record WriteReqBody(@NotBlank String title, @NotBlank String content, boolean published, boolean listed) { }
 
     @Operation(summary = "글 작성", description = "로그인 한 사용자만 글 작성 가능")
     @PostMapping
@@ -126,12 +123,12 @@ public class ApiV1PostController {
         );
     }
 
-    record ModifyReqBody(@NotBlank String title, @NotBlank String content) { }
+    record PostModifyReqBody(@NotBlank String title, @NotBlank String content, boolean published, boolean listed) { }
 
     @Operation(summary = "글 수정", description = "작성자와 관리자만 글 수정 가능")
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Transactional
-    public RsData<PostWithContentDto> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody reqBody) {
+    public RsData<PostWithContentDto> modify(@PathVariable long id, @RequestBody @Valid PostModifyReqBody reqBody) {
 
         Member actor = rq.getActor(); // 야매
 
@@ -141,7 +138,7 @@ public class ApiV1PostController {
 
         post.canModify(actor);
 
-        postService.modify(post, reqBody.title(), reqBody.content());
+        postService.modify(post, reqBody.title(), reqBody.content(), reqBody.published(), reqBody.listed());
 
         return new RsData<>(
                 "200-1",

@@ -4,7 +4,7 @@ import { components } from "@/lib/backend/apiV1/schema";
 import client from "@/lib/backend/client";
 import Link from "next/link";
 
-export default function ClientLayout({
+export default function ClinetLayout({
   children,
   me,
 }: Readonly<{
@@ -48,6 +48,8 @@ export default function ClientLayout({
         </header>
         <div className="flex-grow">{children}</div>
         <footer>푸터</footer>
+
+        <input type="text" />
       </body>
     </html>
   );

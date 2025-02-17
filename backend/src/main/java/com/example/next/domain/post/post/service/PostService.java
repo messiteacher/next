@@ -7,6 +7,7 @@ import com.example.next.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +23,7 @@ public class PostService {
     public Post write(Member author, String title, String content, boolean published, boolean listed) {
 
         return postRepository.save(
-                Post
-                        .builder()
+                Post.builder()
                         .author(author)
                         .title(title)
                         .content(content)
@@ -50,9 +50,12 @@ public class PostService {
     }
 
     @Transactional
-    public void modify(Post post, String title, String content) {
+    public void modify(Post post, String title, String content, boolean published, boolean listed) {
+
         post.setTitle(title);
         post.setContent(content);
+        post.setPublished(published);
+        post.setListed(listed);
     }
 
     public void flush() {
@@ -65,10 +68,11 @@ public class PostService {
 
     public Page<Post> getListedItems(int page, int pageSize, SearchKeywordType keywordType, String keyword) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+
         String likeKeyword = "%" + keyword + "%";
 
-        if (SearchKeywordType.content == keywordType) {
+        if(SearchKeywordType.content == keywordType) {
             return postRepository.findByListedAndContentLike(true, likeKeyword, pageRequest);
         }
 
@@ -77,10 +81,10 @@ public class PostService {
 
     public Page<Post> getMines(Member author, int page, int pageSize, SearchKeywordType keywordType, String keyword) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
         String likeKeyword = "%" + keyword + "%";
 
-        if (SearchKeywordType.content == keywordType) {
+        if(SearchKeywordType.content == keywordType) {
             return postRepository.findByAuthorAndContentLike(author, likeKeyword, pageRequest);
         }
 

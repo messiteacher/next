@@ -50,9 +50,7 @@ public class Post extends BaseTime {
         return comments.stream()
                 .filter(comment -> comment.getId() == id)
                 .findFirst()
-                .orElseThrow(
-                        () -> new ServiceException("404-1", "존재하지 않는 댓글입니다.")
-                );
+                .orElseThrow(() -> new ServiceException("404-2", "존재하지 않는 댓글입니다."));
     }
 
     public void deleteComment(Comment comment) {
@@ -65,9 +63,9 @@ public class Post extends BaseTime {
             throw new ServiceException("401-1", "인증 정보가 없습니다.");
         }
 
-        if (actor.isAdmin()) return ;
+        if (actor.isAdmin()) return;
 
-        if (actor.equals(this.author)) return ;
+        if (actor.equals(this.author)) return;
 
         throw new ServiceException("403-1", "자신이 작성한 글만 수정 가능합니다.");
     }
@@ -79,6 +77,7 @@ public class Post extends BaseTime {
         }
 
         if (actor.isAdmin()) return;
+
         if (actor.equals(this.author)) return;
 
         throw new ServiceException("403-1", "자신이 작성한 글만 삭제 가능합니다.");
@@ -86,9 +85,8 @@ public class Post extends BaseTime {
 
     public void canRead(Member actor) {
 
-        if (this.published) return ;
-        if (actor.equals(this.author)) return ;
-        if (actor.isAdmin()) return ;
+        if (actor.equals(this.author)) return;
+        if (actor.isAdmin()) return;
 
         throw new ServiceException("403-1", "비공개 설정된 글입니다.");
     }
@@ -98,8 +96,13 @@ public class Post extends BaseTime {
         return comments.stream()
                 .sorted(Comparator.comparing(Comment::getId).reversed())
                 .findFirst()
-                .orElseThrow(
-                        () -> new ServiceException("404-2", "존재하지 않는 댓글입니다.")
-                );
+                .orElseThrow(() -> new ServiceException("404-2", "존재하지 않는 댓글입니다."));
+    }
+
+    public boolean getHandleAuthority(Member actor) {
+        if (actor == null) return false;
+        if (actor.isAdmin()) return true;
+
+        return actor.equals(this.author);
     }
 }

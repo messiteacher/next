@@ -2,6 +2,7 @@ package com.example.next.domain.post.post.dto;
 
 import com.example.next.domain.post.post.entity.Post;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
@@ -27,15 +28,17 @@ public class PostWithContentDto {
     private boolean published;
     @NonNull
     private boolean listed;
+    @NonNull
+    @Setter
+    private boolean canActorHandle;
 
     public PostWithContentDto(Post post) {
-
         this.id = post.getId();
         this.createdDate = post.getCreatedDate();
         this.modifiedDate = post.getModifiedDate();
         this.title = post.getTitle();
-        this.authorId = post.getAuthor().getId();
         this.content = post.getContent();
+        this.authorId = post.getAuthor().getId();
         this.authorName = post.getAuthor().getNickname();
         this.published = post.isPublished();
         this.listed = post.isListed();
