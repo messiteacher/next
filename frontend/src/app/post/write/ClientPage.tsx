@@ -6,11 +6,13 @@ export default function ClinetPage() {
   const router = useRouter();
   async function write(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     const form = e.target as HTMLFormElement;
     const title = form._title.value;
     const content = form.content.value;
     const published = form.published.checked;
     const listed = form.listed.checked;
+
     if (title.trim().length === 0) {
       alert("제목을 입력해주세요.");
       return;
