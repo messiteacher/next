@@ -2,8 +2,8 @@
 
 import { components } from "@/lib/backend/apiV1/schema";
 import client from "@/lib/backend/client";
-import { faBookBookmark, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -43,9 +43,12 @@ export default function ClinetLayout({
   return (
     <html lang="en" className={`${fontVariable}`}>
       <body className={`min-h-[100dvh] flex flex-col ${fontClassName}`}>
-        <header className="flex justify-end gap-3">
+        <header className="flex justify-end gap-3 px-4">
           <DropdownMenu>
-            <DropdownMenuTrigger>Home</DropdownMenuTrigger>
+            <DropdownMenuTrigger>
+              <FontAwesomeIcon icon={faHouse} />
+              Home
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>{me.nickname}</DropdownMenuLabel>
               <DropdownMenuSeparator />
